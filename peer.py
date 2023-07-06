@@ -14,6 +14,11 @@ class Peer:
             self.socket.connect((peer_host, peer_port))
             self.connections.append(self.socket)
             print(f"Connected to {peer_host}:{peer_port}")
+
+            recieve_thread = threading.Thread(
+                target=self.recieve_while_listening)
+            recieve_thread.start()
+
         except socket.error as e:
             print(f"Failed to connect to {peer_host}:{peer_port}. Error: {e}")
 
@@ -42,4 +47,9 @@ class Peer:
         print(f"Accepted connection from {address}")
         while True:
             data = connection.recv(1024).decode()
+            print(f"Received data: {data}")
+
+    def recieve_while_listening(self):
+        while True:
+            data = self.socket.recv(1024).decode()
             print(f"Received data: {data}")
