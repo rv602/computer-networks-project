@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMainWindow
 
 class JoinPage(QMainWindow):
     def __init__(self):
@@ -24,13 +24,13 @@ class Ui_Join(object):
         font = QtGui.QFont()
         font.setPointSize(18)
         self.heading.setFont(font)
-        self.heading.setTextFormat(QtCore.Qt.RichText)
-        self.heading.setAlignment(QtCore.Qt.AlignCenter)
+        self.heading.setTextFormat(QtCore.Qt.TextFormat.RichText)
+        self.heading.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.heading.setObjectName("heading")
         self.verticalLayout.addWidget(self.heading)
         self.subheading = QtWidgets.QLabel(self.centralwidget)
         self.subheading.setMinimumSize(QtCore.QSize(0, 30))
-        self.subheading.setAlignment(QtCore.Qt.AlignCenter)
+        self.subheading.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.subheading.setObjectName("subheading")
         self.verticalLayout.addWidget(self.subheading)
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
@@ -64,22 +64,12 @@ class Ui_Join(object):
 
         self.retranslateUi(Join)
         QtCore.QMetaObject.connectSlotsByName(Join)
-        
+
     def retranslateUi(self, Join):
         _translate = QtCore.QCoreApplication.translate
         Join.setWindowTitle(_translate("Join", "Join"))
         self.heading.setText(_translate("Join", "ClipShare"))
-        self.subheading.setText(_translate("Join", "Enter host Ip address"))
+        self.subheading.setText(_translate("Join", "Enter host IP address"))
         self.label.setText(_translate("Join", "You are connected or not connected"))
         self.clipboard.setText(_translate("Join", "Clipboard"))
         self.back.setText(_translate("Join", "Back"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Join = QtWidgets.QMainWindow()
-    ui = Ui_Join()
-    ui.setupUi(Join)
-    Join.show()
-    sys.exit(app.exec_())

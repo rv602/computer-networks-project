@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMainWindow
 
 class CreatePage(QMainWindow):
     def __init__(self):
@@ -23,13 +23,13 @@ class Ui_Host(object):
         font = QtGui.QFont()
         font.setPointSize(18)
         self.heading.setFont(font)
-        self.heading.setTextFormat(QtCore.Qt.RichText)
-        self.heading.setAlignment(QtCore.Qt.AlignCenter)
+        self.heading.setTextFormat(QtCore.Qt.TextFormat.RichText)
+        self.heading.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.heading.setObjectName("heading")
         self.verticalLayout.addWidget(self.heading)
         self.subheading = QtWidgets.QLabel(self.centralwidget)
         self.subheading.setMinimumSize(QtCore.QSize(0, 30))
-        self.subheading.setAlignment(QtCore.Qt.AlignCenter)
+        self.subheading.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.subheading.setObjectName("subheading")
         self.verticalLayout.addWidget(self.subheading)
         self.ip_addr = QtWidgets.QLabel(self.centralwidget)
@@ -67,9 +67,6 @@ class Ui_Host(object):
         Host.setWindowTitle(_translate("Host", "MainWindow"))
         self.heading.setText(_translate("Host", "ClipShare"))
         self.subheading.setText(_translate("Host", "Share this IP address with other computers."))
-        self.ip_addr.setText(_translate("Host", "Your ip address is ..."))
+        self.ip_addr.setText(_translate("Host", "Your IP address is ..."))
         self.clipboard.setText(_translate("Host", "Clipboard"))
         self.back.setText(_translate("Host", "Back"))
-
-
-

@@ -1,13 +1,12 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QApplication
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMainWindow, QApplication
 from create_page import CreatePage
 from join_page import JoinPage
-from PyQt5.QtCore import pyqtSignal
 
 class MainPage(QMainWindow):
-    join_page= False
+    join_page = False
     create_page = False
+
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -36,7 +35,6 @@ class MainPage(QMainWindow):
 
 
 class Ui_MainWindow(object):
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(465, 421)
@@ -50,12 +48,12 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(20)
         self.heading.setFont(font)
-        self.heading.setTextFormat(QtCore.Qt.RichText)
-        self.heading.setAlignment(QtCore.Qt.AlignCenter)
+        self.heading.setTextFormat(QtCore.Qt.TextFormat.RichText)
+        self.heading.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.heading.setObjectName("heading")
         self.verticalLayout.addWidget(self.heading)
         self.subheading = QtWidgets.QLabel(self.centralwidget)
-        self.subheading.setAlignment(QtCore.Qt.AlignCenter)
+        self.subheading.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.subheading.setObjectName("subheading")
         self.verticalLayout.addWidget(self.subheading)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -80,39 +78,23 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        # self.create.clicked.connect(self.create_scr)
-        # self.join.clicked.connect(self.join_scr)
-
-    # def create_scr(self):
-    #     self.Host = QtWidgets.QMainWindow()
-    #     self.ui = Ui_Host()
-    #     self.ui.setupUi(self.Host)
-    #     self.hide()
-    #     self.Host.show()
-
-    # def join_scr(self):
-    #     self.Join = QtWidgets.QMainWindow()
-    #     self.ui = Ui_Join()
-    #     self.ui.setupUi(self.Join)
-    #     self.Join.show()
-
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.heading.setText(_translate("MainWindow", "Welcome to ClipShare"))
-        self.subheading.setText(_translate("MainWindow", "Share you clipboard easily with your other devices or friends."))
-        self.create.setStatusTip(_translate("MainWindow", "Hosts the server for other to connect."))
+        self.subheading.setText(
+            _translate("MainWindow", "Share your clipboard easily with your other devices or friends.")
+        )
+        self.create.setStatusTip(_translate("MainWindow", "Host the server for others to connect."))
         self.create.setText(_translate("MainWindow", "Create"))
-        self.join.setStatusTip(_translate("MainWindow", "Join existing server."))
+        self.join.setStatusTip(_translate("MainWindow", "Join an existing server."))
         self.join.setText(_translate("MainWindow", "Join"))
 
 
 if __name__ == "__main__":
     import sys
-    app = QApplication(sys.argv)
+    app = QApplication([])
     main_page = MainPage()
     main_page.show()
-    sys.exit(app.exec_())
-
+    sys.exit(app.exec())
 
