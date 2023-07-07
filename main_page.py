@@ -4,11 +4,13 @@ from create_page import CreatePage
 from join_page import JoinPage
 import netifaces
 import peer
+import clipboard as c
 
 class MainPage(QMainWindow):
     join_page = False
     create_page = False
     peer = ''
+    previous_clipboard_text = ""
 
     def __init__(self):
         super().__init__()
@@ -41,7 +43,11 @@ class MainPage(QMainWindow):
 
             while self.create_page.isVisible():
                 QtWidgets.QApplication.processEvents()
-                peer1.send_data('hello there')
+
+                current_clipboard_text = c.paste()
+                if current_clipboard_text != self.previous_clipboard_text:
+                    self.previous_clipboard_text = current_clipboard_text
+                    peer1.send_data(current_clipboard_text)
 
             print('create page closed')
         
