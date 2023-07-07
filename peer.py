@@ -1,5 +1,7 @@
 import socket
 import threading
+import time
+import clipboard as c
 
 
 class Peer:
@@ -53,3 +55,8 @@ class Peer:
         while True:
             data = self.socket.recv(1024).decode()
             print(f"Received data: {data}")
+
+print(c.paste())
+# test = 'this is the text to be copied to clipboard'
+# c.copy(test)
+# print(c.paste())

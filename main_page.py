@@ -30,16 +30,21 @@ class MainPage(QMainWindow):
         return None
 
     def show_create_page(self):
-        self.hide()
         local_ip = self.get_local_network_ip()
         if local_ip:
-            peer1 = peer.Peer(local_ip, 6002)
+            peer1 = peer.Peer(local_ip, 6001)
             peer1.start()
-            peer1.send_data("Hello from peer 1")
             self.create_page = CreatePage()
             self.create_page.set_local_ip(local_ip)
             self.create_page.ui.back.clicked.connect(self.show_main_page)
             self.create_page.show()
+
+            while self.create_page.isVisible():
+                QtWidgets.QApplication.processEvents()
+                peer1.send_data('hello there')
+
+            print('create page closed')
+        
         else:
             self.show_main_page()
 
