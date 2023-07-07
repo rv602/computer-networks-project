@@ -1,9 +1,15 @@
 import socket
 import threading
+import time
+import clipboard as c
+from PyQt6 import QtCore
 
 
-class Peer:
+class Peer(QtCore.QObject):
+    received_data_signal = QtCore.pyqtSignal(str)
+
     def __init__(self, host, port):
+        super().__init__() 
         self.host = host
         self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,7 +22,7 @@ class Peer:
             print(f"Connected to {peer_host}:{peer_port}")
 
             recieve_thread = threading.Thread(
-                target=self.recieve_while_listening)
+                target=self.receive_while_listening)
             recieve_thread.start()
 
         except socket.error as e:
@@ -41,15 +47,33 @@ class Peer:
         listen_thread = threading.Thread(target=self.listen)
         listen_thread.start()
 
+#     def receive_data(self):
+#         connection, address = self.socket.accept()
+#         self.connections.append(connection)
+#         print(f"Accepted connection from {address}")
+#         while True:
+#             data = connection.recv(1024).decode()
+#             print(f"Received data: {data}")
+
+#     def recieve_while_listening(self):
+#         while True:
+#             data = self.socket.recv(1024).decode()
+#             print(f"Received data: {data}")
+
+# print(c.paste())
+# # test = 'this is the text to be copied to clipboard'
+# # c.copy(test)
+# # print(c.paste())
+
     def receive_data(self):
         connection, address = self.socket.accept()
         self.connections.append(connection)
         print(f"Accepted connection from {address}")
         while True:
             data = connection.recv(1024).decode()
-            print(f"Received data: {data}")
+            self.received_data_signal.emit(data)  # Emit the received data signal
 
-    def recieve_while_listening(self):
+    def receive_while_listening(self):
         while True:
             data = self.socket.recv(1024).decode()
-            print(f"Received data: {data}")
+            self.received_data_signal.emit(data) 
