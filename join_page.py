@@ -2,11 +2,17 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMainWindow
 
 class JoinPage(QMainWindow):
+    join_signal = QtCore.pyqtSignal(str) 
     def __init__(self):
         super().__init__()
 
         self.ui = Ui_Join()
         self.ui.setupUi(self)
+        self.ui.lineEdit.returnPressed.connect(self.join_action)
+
+    def join_action(self):
+        input_text = self.ui.lineEdit.text()
+        self.join_signal.emit(input_text)  # Emit the signal with the entered IP address
 
 
 class Ui_Join(object):
@@ -34,7 +40,7 @@ class Ui_Join(object):
         self.subheading.setObjectName("subheading")
         self.verticalLayout.addWidget(self.subheading)
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setObjectName("lineEdit")
+        self.lineEdit.setObjectName("input_line")
         self.verticalLayout.addWidget(self.lineEdit)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setObjectName("label")

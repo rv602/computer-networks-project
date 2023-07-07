@@ -7,6 +7,19 @@ class CreatePage(QMainWindow):
 
         self.ui = Ui_Host()
         self.ui.setupUi(self)
+        self._local_ip = None
+
+    def set_local_ip(self, local_ip):
+        self._local_ip = local_ip
+        if self._local_ip:
+            self.ui.ip_addr.setText(f"Your IP address is {self._local_ip}")
+        else:
+            self.ui.ip_addr.setText("Connection failed. Please try again.")
+
+    def get_local_ip(self):
+        return self._local_ip
+
+    
 
 class Ui_Host(object):
     def setupUi(self, Host):

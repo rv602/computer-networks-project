@@ -2,6 +2,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMainWindow, QApplication
 from create_page import CreatePage
 from join_page import JoinPage
+import netifaces
+import peer
 
 class MainPage(QMainWindow):
     join_page = False
@@ -13,18 +15,46 @@ class MainPage(QMainWindow):
         self.ui.setupUi(self)
         self.ui.create.clicked.connect(self.show_create_page)
         self.ui.join.clicked.connect(self.show_join_page)
+    
+    def get_local_network_ip(self):
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            addresses = netifaces.ifaddresses(interface)
+            if netifaces.AF_INET in addresses:
+                ipv4_addresses = addresses[netifaces.AF_INET]
+                for addr in ipv4_addresses:
+                    ip = addr['addr']
+                    if not ip.startswith('127.'):
+                        return ip
+        return None
 
     def show_create_page(self):
         self.hide()
-        self.create_page = CreatePage()
-        self.create_page.ui.back.clicked.connect(self.show_main_page)
-        self.create_page.show()
+        local_ip = self.get_local_network_ip()
+        if local_ip:
+            peer1 = peer.Peer(local_ip, 6002)
+            peer1.start()
+            self.create_page = CreatePage()
+            self.create_page.set_local_ip(local_ip)
+            self.create_page.ui.back.clicked.connect(self.show_main_page)
+            self.create_page.show()
+        else:
+            self.show_main_page()
 
     def show_join_page(self):
-        self.hide()
-        self.join_page = JoinPage()
-        self.join_page.ui.back.clicked.connect(self.show_main_page)
-        self.join_page.show()
+        local_ip = self.get_local_network_ip()
+        if local_ip:
+            peer2 = peer.Peer(local_ip, 6001)
+            self.join_page = JoinPage()
+            ip_addr = self.join_page.join_signal.connect(self.handle_join_input)
+            peer2.connect(ip_addr,7000)
+            self.join_page.ui.back.clicked.connect(self.show_main_page)
+            self.join_page.show()
+        else:
+            self.show_main_page()
+
+    def handle_join_input(self, input_text):
+        return input_text
 
     def show_main_page(self):
         self.show()
