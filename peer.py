@@ -22,7 +22,7 @@ class Peer(QtCore.QObject):
             print(f"Connected to {peer_host}:{peer_port}")
 
             recieve_thread = threading.Thread(
-                target=self.recieve_while_listening)
+                target=self.receive_while_listening)
             recieve_thread.start()
 
         except socket.error as e:

@@ -11,6 +11,7 @@ class MainPage(QMainWindow):
     create_page = False
     peer = ''
     previous_clipboard_text = ""
+    messages = []
 
     def __init__(self):
         super().__init__()
@@ -57,9 +58,6 @@ class MainPage(QMainWindow):
         else:
             self.show_main_page()
 
-    def handle_received_data(self, data):
-        print(f"Received data in main page: {data}")
-        c.copy(data)
 
 
     def show_join_page(self):
@@ -71,7 +69,8 @@ class MainPage(QMainWindow):
             self.join_page.show()
             self.peer = peer2
             self.join_page.join_signal.connect(self.handle_join_input)
-            while self.create_page.isVisible():
+            self.join_page.ui.back.clicked.connect(self.show_main_page)
+            while self.join.isVisible():
                 QtWidgets.QApplication.processEvents()
 
                 current_clipboard_text = c.paste()
@@ -85,9 +84,14 @@ class MainPage(QMainWindow):
         else:
             self.show_main_page()
 
+    def handle_received_data(self, data):
+        print(f"Received data in main page: {data}")
+        c.copy(data)
+
+
     def handle_join_input(self, input_text):
         print(input_text)
-        self.peer.connect(input_text,6002)
+        self.peer.connect(input_text,6001)
         self.peer.send_data('hello there')
 
     def show_main_page(self):
