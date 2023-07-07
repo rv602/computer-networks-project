@@ -9,6 +9,11 @@ class CreatePage(QMainWindow):
         self.ui.setupUi(self)
         self._local_ip = None
 
+    def set_messages(self, messages):
+        self.ui.textBrowser.clear()
+        for message in messages:
+            self.ui.textBrowser.append(str(message))
+
     def set_local_ip(self, local_ip):
         self._local_ip = local_ip
         if self._local_ip:

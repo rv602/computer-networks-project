@@ -34,14 +34,17 @@ class MainPage(QMainWindow):
 
     def show_create_page(self):
         local_ip = self.get_local_network_ip()
+        message_size = len(self.messages)
         if local_ip:
             self.hide()
-            peer1 = peer.Peer(local_ip, 6001)
+            peer1 = peer.Peer(local_ip, 6004)
             peer1.start()
             self.create_page = CreatePage()
             self.create_page.set_local_ip(local_ip)
             self.create_page.ui.back.clicked.connect(self.show_main_page)
             self.create_page.show()
+            peer1.received_data_signal.connect(self.handle_received_data)
+            
 
             while self.create_page.isVisible():
                 QtWidgets.QApplication.processEvents()
@@ -50,7 +53,6 @@ class MainPage(QMainWindow):
                 if current_clipboard_text != self.previous_clipboard_text:
                     self.previous_clipboard_text = current_clipboard_text
                     peer1.send_data(current_clipboard_text)
-                    peer1.received_data_signal.connect(self.handle_received_data)  # Connect the signal to a slot
 
 
             print('create page closed')
@@ -70,14 +72,14 @@ class MainPage(QMainWindow):
             self.peer = peer2
             self.join_page.join_signal.connect(self.handle_join_input)
             self.join_page.ui.back.clicked.connect(self.show_main_page)
-            while self.join.isVisible():
+            peer2.received_data_signal.connect(self.handle_received_data)  # Connect the signal to a slot
+            while self.join_page.isVisible():
                 QtWidgets.QApplication.processEvents()
 
                 current_clipboard_text = c.paste()
                 if current_clipboard_text != self.previous_clipboard_text:
                     self.previous_clipboard_text = current_clipboard_text
                     peer2.send_data(current_clipboard_text)
-                    peer2.received_data_signal.connect(self.handle_received_data)  # Connect the signal to a slot
 
 
             print('join page closed')
@@ -87,12 +89,17 @@ class MainPage(QMainWindow):
     def handle_received_data(self, data):
         print(f"Received data in main page: {data}")
         c.copy(data)
+        self.messages.append(data)
+        if self.create_page:
+            self.create_page.set_messages(self.messages)
+        if self.join_page:
+            self.join_page.set_messages(self.messages)
+
 
 
     def handle_join_input(self, input_text):
         print(input_text)
-        self.peer.connect(input_text,6001)
-        self.peer.send_data('hello there')
+        self.peer.connect(input_text,6003)
 
     def show_main_page(self):
         self.show()

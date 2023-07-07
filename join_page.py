@@ -12,7 +12,12 @@ class JoinPage(QMainWindow):
 
     def join_action(self):
         input_text = self.ui.lineEdit.text()
-        self.join_signal.emit(input_text)  # Emit the signal with the entered IP address
+        self.join_signal.emit(input_text)
+        
+    def set_messages(self, messages):
+        self.ui.textBrowser.clear()
+        for message in messages:
+            self.ui.textBrowser.append(str(message))  # Emit the signal with the entered IP address
 
 
 class Ui_Join(object):
