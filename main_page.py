@@ -8,6 +8,7 @@ import peer
 class MainPage(QMainWindow):
     join_page = False
     create_page = False
+    peer = ''
 
     def __init__(self):
         super().__init__()
@@ -34,6 +35,7 @@ class MainPage(QMainWindow):
         if local_ip:
             peer1 = peer.Peer(local_ip, 6002)
             peer1.start()
+            peer1.send_data("Hello from peer 1")
             self.create_page = CreatePage()
             self.create_page.set_local_ip(local_ip)
             self.create_page.ui.back.clicked.connect(self.show_main_page)
@@ -46,15 +48,18 @@ class MainPage(QMainWindow):
         if local_ip:
             peer2 = peer.Peer(local_ip, 6001)
             self.join_page = JoinPage()
-            ip_addr = self.join_page.join_signal.connect(self.handle_join_input)
-            peer2.connect(ip_addr,7000)
-            self.join_page.ui.back.clicked.connect(self.show_main_page)
             self.join_page.show()
+            self.peer = peer2
+            self.join_page.join_signal.connect(self.handle_join_input)
+            
+            self.join_page.ui.back.clicked.connect(self.show_main_page)
         else:
             self.show_main_page()
 
     def handle_join_input(self, input_text):
-        return input_text
+        print(input_text)
+        self.peer.connect(input_text,6002)
+        self.peer.send_data('hello there')
 
     def show_main_page(self):
         self.show()
