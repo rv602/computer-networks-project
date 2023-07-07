@@ -46,6 +46,7 @@ class MainPage(QMainWindow):
     def show_join_page(self):
         local_ip = self.get_local_network_ip()
         if local_ip:
+            self.hide()
             peer2 = peer.Peer(local_ip, 6001)
             self.join_page = JoinPage()
             self.join_page.show()
