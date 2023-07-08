@@ -12,6 +12,8 @@ class MainPage(QMainWindow):
     peer = ''
     previous_clipboard_text = ""
     messages = []
+    connection_status = True
+    join_ip = ''
 
     def __init__(self):
         super().__init__()
@@ -70,6 +72,7 @@ class MainPage(QMainWindow):
             peer2 = peer.Peer(local_ip, 6001)
             self.join_page = JoinPage()
             self.join_page.show()
+            self.join_page.ui.label.hide()
             self.peer = peer2
             self.join_page.join_signal.connect(self.handle_join_input)
             self.join_page.ui.back.clicked.connect(self.show_main_page)
@@ -81,6 +84,7 @@ class MainPage(QMainWindow):
                 if current_clipboard_text != self.previous_clipboard_text:
                     self.previous_clipboard_text = current_clipboard_text
                     peer2.send_data(current_clipboard_text)
+                self.join_page.set_status(self.connection_status,self.join_ip)
 
 
             print('join page closed')
@@ -99,8 +103,10 @@ class MainPage(QMainWindow):
 
 
     def handle_join_input(self, input_text):
-        print(input_text)
-        self.peer.connect(input_text,6003)
+        self.join_ip = input_text
+        self.connection_status = self.peer.connect(input_text,6004)
+        self.join_page.ui.label.show()
+
 
     # def show_main_page(self):
     #     self.show()

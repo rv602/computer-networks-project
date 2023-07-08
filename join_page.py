@@ -10,6 +10,14 @@ class JoinPage(QMainWindow):
         self.ui.setupUi(self)
         self.ui.lineEdit.returnPressed.connect(self.join_action)
 
+    def set_status(self, connection_status, join_ip):
+        if connection_status:
+            self.ui.label.setText(f"Your IP address is {join_ip}")
+        else:
+            self.ui.label.setText("Connection failed. Please try again.")
+
+
+
     def join_action(self):
         input_text = self.ui.lineEdit.text()
         self.join_signal.emit(input_text)

@@ -24,9 +24,11 @@ class Peer(QtCore.QObject):
             recieve_thread = threading.Thread(
                 target=self.receive_while_listening)
             recieve_thread.start()
+            return True
 
         except socket.error as e:
             print(f"Failed to connect to {peer_host}:{peer_port}. Error: {e}")
+            return False
 
     def listen(self):
         self.socket.bind((self.host, self.port))
