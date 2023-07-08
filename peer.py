@@ -65,15 +65,39 @@ class Peer(QtCore.QObject):
 # # c.copy(test)
 # # print(c.paste())
 
+    # def receive_data(self):
+    #     connection, address = self.socket.accept()
+    #     self.connections.append(connection)
+    #     print(f"Accepted connection from {address}")
+    #     while True:
+    #         data = connection.recv(1024).decode()
+    #         self.received_data_signal.emit(data)  # Emit the received data signal
+
     def receive_data(self):
-        connection, address = self.socket.accept()
-        self.connections.append(connection)
-        print(f"Accepted connection from {address}")
-        while True:
-            data = connection.recv(1024).decode()
-            self.received_data_signal.emit(data)  # Emit the received data signal
+        try:
+            connection, address = self.socket.accept()
+            self.connections.append(connection)
+            print(f"Accepted connection from {address}")
+            while True:
+                data = connection.recv(1024).decode()
+                self.received_data_signal.emit(data)  # Emit the received data signal
+        except ConnectionAbortedError as e:
+            print(f"Connection aborted. Error: {e}")
+        except socket.error as e:
+            print(f"Socket error occurred. Error: {e}")
+
 
     def receive_while_listening(self):
         while True:
             data = self.socket.recv(1024).decode()
             self.received_data_signal.emit(data) 
+
+    def close(self):
+        for connection in self.connections:
+            connection.close()
+        self.socket.close()
+
+    def terminate(self):
+        self.close()
+        self.connections = []
+        self.socket = None

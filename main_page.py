@@ -39,6 +39,7 @@ class MainPage(QMainWindow):
             self.hide()
             peer1 = peer.Peer(local_ip, 6004)
             peer1.start()
+            self.peer = peer1
             self.create_page = CreatePage()
             self.create_page.set_local_ip(local_ip)
             self.create_page.ui.back.clicked.connect(self.show_main_page)
@@ -101,12 +102,22 @@ class MainPage(QMainWindow):
         print(input_text)
         self.peer.connect(input_text,6003)
 
+    # def show_main_page(self):
+    #     self.show()
+    #     if self.create_page:
+    #         self.create_page.close()
+    #     if self.join_page:
+    #         self.join_page.close()
+
     def show_main_page(self):
         self.show()
         if self.create_page:
             self.create_page.close()
+            self.peer.terminate()  # Close and terminate the socket
         if self.join_page:
             self.join_page.close()
+            self.peer.terminate()  # Close and terminate the socket
+
 
 
 class Ui_MainWindow(object):
